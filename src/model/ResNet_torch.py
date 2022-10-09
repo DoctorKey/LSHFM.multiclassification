@@ -187,25 +187,6 @@ class ResNet(nn.Module):
     def get_classifier_params(self):
         return self.fc.parameters()
 
-    def shuffle_last_conv_classifier(self):
-        last_block = self.layer4[-1]
-        if isinstance(last_block, BasicBlock):
-            conv = last_block.conv2
-            bn = last_block.bn2
-        elif isinstance(last_block, Bottleneck):
-            conv = last_block.conv3
-            bn = last_block.bn3
-        feat_dim = len(bn.weight)
-        idx = torch.randperm(feat_dim)
-        conv.weight.data = conv.weight.data[idx]
-        #conv.bias.data = conv.bias.data[idx]
-        bn.weight.data = bn.weight.data[idx]
-        bn.bias.data = bn.bias.data[idx]
-        bn.running_mean.data = bn.running_mean.data[idx]
-        bn.running_var.data = bn.running_var.data[idx]
-        self.fc.weight.data = self.fc.weight.data.t()[idx].t()
-        #self.fc.bias.data = self.fc.bias.data[idx]
-
 
     def _make_layer(self, block, planes, blocks, stride=1, dilate=False):
         norm_layer = self._norm_layer
