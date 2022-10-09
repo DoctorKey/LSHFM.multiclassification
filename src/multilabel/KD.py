@@ -53,7 +53,6 @@ def main(context):
     LOG.info("=> creating teacher model '{}'".format(args.arch_t))
     model_t = create_model(args.arch_t, num_classes, detach_para=True, DataParallel=False)
     model_t = load_pretrained(model_t, args.pretrained_t, args.arch_t, LOG)
-    model_t.module.shuffle_last_conv_classifier()
     model_t.eval()
 
     weight, bias = model_t.module.get_classifier_weight()
